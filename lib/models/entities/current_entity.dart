@@ -92,7 +92,7 @@ class DateTimeFormater {
   static String dateTimeFormatVi = "dd/MM/yyyy HH:mm:ss";
   static String dateTimeHour = "HH:mm dd/MM/yyyy";
   static String dateTime = "HH:mm";
-
+  static String dateday = "EEEE";
   /// Format date from server và to server;
   static String dateTimeFormat = "yyyy-MM-dd";
   static String dateTimeFormatNormal = "yyyy-MM-dd HH:mm:ss";

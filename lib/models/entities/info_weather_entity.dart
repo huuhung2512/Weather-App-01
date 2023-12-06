@@ -62,14 +62,19 @@ class InfoWeatherEntity {
 
   String get dateTime {
    try {
-      // Assuming that dt is the timestamp in seconds, convert it to milliseconds
       DateTime dateTimeValue = DateTime.fromMillisecondsSinceEpoch(dt! * 1000, isUtc: true);
-      
-      // Convert the timestamp to the local time in Vietnam
       DateTime vietnamDateTime = dateTimeValue.toLocal();
-      
-      // Use the custom format from DateTimeFormater class
       return vietnamDateTime.customOnlyDate(format: DateTimeFormater.dateTimeHour);
+    } catch (_) {
+      return '';
+    }
+  }
+
+  String get dateDay {
+   try {
+      DateTime dateTimeValue = DateTime.fromMillisecondsSinceEpoch(dt! * 1000, isUtc: true);
+      DateTime vietnamDateTime = dateTimeValue.toLocal();
+      return vietnamDateTime.customOnlyDate(format: DateTimeFormater.dateday);
     } catch (_) {
       return '';
     }
