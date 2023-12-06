@@ -195,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Split the snapshot data into current and forecast data
                     InfoWeatherEntity infoWeatherEntity =
                         (snapshot.data as List)[0] as InfoWeatherEntity;
+                    // ignore: unused_local_variable
                     Map<String, List<InfoWeatherEntity>> forecastData =
                         (snapshot.data as List)[1]
                             as Map<String, List<InfoWeatherEntity>>;
@@ -261,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 child: Opacity(
                                                   opacity: 0.2,
                                                   child: Text(
-                                                    "${roundTemperature(infoWeatherEntity.main?.humidity) ?? ''}°",
+                                                    "${roundTemperature(infoWeatherEntity.main?.humidity)}°",
                                                     style: TextStyle(
                                                       fontSize: 27,
                                                       color: Colors.white,

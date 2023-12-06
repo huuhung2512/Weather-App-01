@@ -128,7 +128,7 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
                                   color: Colors.white,
                                 ),
                                 Text(
-                                  '${dailyForecast[0]?.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C',
+                                  '${dailyForecast[0].main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C',
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 SizedBox(height: 8),
@@ -136,12 +136,12 @@ class _WeatherForecastWidgetState extends State<WeatherForecastWidget> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '${dailyForecast[0]?.main?.tempMax?.toStringAsFixed(1) ?? 'N/A'}°C',
+                                      '${dailyForecast[0].main?.tempMax?.toStringAsFixed(1) ?? 'N/A'}°C',
                                       style: TextStyle(fontSize: 14),
                                     ),
                                     SizedBox(width: 8),
                                     Text(
-                                      '${dailyForecast[0]?.main?.tempMin?.toStringAsFixed(1) ?? 'N/A'}°C',
+                                      '${dailyForecast[0].main?.tempMin?.toStringAsFixed(1) ?? 'N/A'}°C',
                                       style: TextStyle(fontSize: 14),
                                     ),
                                   ],
