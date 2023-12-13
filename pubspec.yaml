@@ -56,6 +56,7 @@ dev_dependencies:
   geolocator: ^10.1.0
   build_runner:
   json_serializable:
+  flutter_svg:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
@@ -78,11 +79,13 @@ flutter:
   assets:
     - assets/images/
     - assets/vectors/
+    - assets/icon_weather_home/
+    - assets/icon_weather_hourly/
   fonts: 
   - family: Inter
     fonts: 
       - asset: assets/fonts/InterRegular.ttf
-        weight: 400
+        weight: 200
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

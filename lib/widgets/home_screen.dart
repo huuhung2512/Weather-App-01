@@ -1,11 +1,13 @@
-import 'dart:math';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/common/app_color.dart';
+import 'package:weather_app/common/app_icon.dart';
 import 'package:weather_app/common/app_logic.dart';
 import 'package:weather_app/services/weather_service.dart';
 import 'package:weather_app/models/entities/info_weather_entity.dart';
 import 'package:weather_app/widgets/dayly_weather.dart';
-import 'package:weather_app/widgets/nexweek.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/widgets/splash_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -45,11 +47,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        toolbarHeight: 120,
+        toolbarHeight: 90,
         backgroundColor: Colors.transparent,
         bottomOpacity: 0.0,
         elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
+        leading: IconButton(
+          icon: Icon(Icons.menu), // Thay đổi biểu tượng menu tùy chọn
+          onPressed: () {},
+        ),
         actions: <Widget>[
           Expanded(
             child: Center(
@@ -66,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           weatherService.city = isUserTyping ? value : 'Hanoi';
                         },
                         onEditingComplete: () {
-                          // Kiểm tra nếu không phải đang nhập, mới load dữ liệu
                           if (!isUserTyping) {
                             loadWeatherData();
                           }
@@ -88,41 +93,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           IconButton(
-              onPressed: () {
-                setState(() {
-                  // Khi người dùng nhấn vào icon find, bạn sẽ load dữ liệu
-                  loadWeatherData();
-                });
-              },
-              icon: const Icon(Icons.search))
+            onPressed: () {
+              setState(() {
+                loadWeatherData();
+              });
+            },
+            icon: const Icon(Icons.search),
+          )
         ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Item 1'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('Item 2'),
-              onTap: () {},
-            ),
-          ],
-        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -136,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => WeatherForecastWidget(),
+                          builder: (context) => SplashScreen(),
                         ),
                       );
                     },
@@ -167,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => WeatherForecastWidget(),
+                          builder: (context) => SplashScreen(),
                         ),
                       );
                     },
@@ -210,186 +188,286 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Align(
                                 alignment: Alignment.center,
                                 child: isExpanded
-                                    ? Card(
-                                        elevation: 4,
-                                        color: Color(0xFFF5D50FE),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(39.0),
-                                        ),
-                                        child: SingleChildScrollView(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Align(
-                                                alignment: Alignment.center,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Text(
-                                                    "${roundTemperature(infoWeatherEntity.main?.temp)}°",
-                                                    style: TextStyle(
-                                                      fontSize: 120,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
+                                    ? Stack(
+                                        children: [
+                                          Container(
+                                            width: 374,
+                                            height: 660.62,
+                                            child: Card(
+                                              elevation: 4,
+                                              color: Color(0xFFF5D50FE),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(39.0),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.all(8),
-                                                child: Text(
-                                                  "${infoWeatherEntity.weather?[0].description ?? ''}",
-                                                  style: TextStyle(
-                                                    fontSize: 23,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.all(8),
-                                                child: Text(
-                                                  "Humidity",
-                                                  style: TextStyle(
-                                                    fontSize: 19,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Align(
-                                                alignment: Alignment.center,
-                                                child: Opacity(
-                                                  opacity: 0.2,
-                                                  child: Text(
-                                                    "${roundTemperature(infoWeatherEntity.main?.humidity)}°",
-                                                    style: TextStyle(
-                                                      fontSize: 27,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 50.0),
+                                              child: SingleChildScrollView(
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
                                                   mainAxisSize:
                                                       MainAxisSize.min,
-                                                  children: [
-                                                    Stack(
-                                                      children: [
-                                                        Center(
-                                                          child: Image.asset(
-                                                            'assets/images/chart1.png',
+                                                  children: <Widget>[
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        child: Text(
+                                                          "${roundTemperature(infoWeatherEntity.main?.temp)}°",
+                                                          style: TextStyle(
+                                                            fontSize: 120,
+                                                            color: AppColors
+                                                                .textPrimary,
                                                           ),
-                                                        ),
-                                                        Center(
-                                                          child: Image.asset(
-                                                            'assets/images/chart2.png',
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 70),
-                                                      child: Text(
-                                                        'Rain Starting in 13 min',
-                                                        style: TextStyle(
-                                                          fontSize: 23,
-                                                          color: Colors.white,
                                                         ),
                                                       ),
                                                     ),
                                                     Padding(
-                                                      padding: EdgeInsets.only(
-                                                          bottom: 100),
+                                                      padding:
+                                                          EdgeInsets.all(8),
                                                       child: Text(
-                                                        'Nearest precip: ${infoWeatherEntity.wind?.speed ?? ''}',
+                                                        "${infoWeatherEntity.weather?[0].description ?? ''}",
                                                         style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.white,
+                                                          fontSize: 23,
+                                                          color: AppColors
+                                                              .textPrimary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      child: Text(
+                                                        "Humidity",
+                                                        style: TextStyle(
+                                                          fontSize: 19,
+                                                          color: AppColors
+                                                              .textPrimary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Opacity(
+                                                        opacity: 0.2,
+                                                        child: Text(
+                                                          "${roundTemperature(infoWeatherEntity.main?.humidity)}°",
+                                                          style: TextStyle(
+                                                            fontSize: 27,
+                                                            color: AppColors
+                                                                .textPrimary,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 50.0),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Stack(
+                                                            children: [
+                                                              Center(
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/images/chart1.png',
+                                                                ),
+                                                              ),
+                                                              Center(
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/images/chart2.png',
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 70),
+                                                            child: Text(
+                                                              'Rain Starting in 13 min',
+                                                              style: TextStyle(
+                                                                fontSize: 23,
+                                                                color: AppColors
+                                                                    .textPrimary,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    bottom:
+                                                                        100),
+                                                            child: Text(
+                                                              'Nearest precip: ${infoWeatherEntity.wind?.speed ?? ''}',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                color: AppColors
+                                                                    .textPrimary,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                              left: 110,
+                                              top: 530.0720214844,
+                                              child: Container(
+                                                width: 36.93,
+                                                height: 36.93,
+                                                child: Image.asset(
+                                                  'assets/images/moon.png',
+                                                  width: 36.93,
+                                                  height: 36.93,
+                                                ),
+                                              )),
+                                          Positioned(
+                                            left: 0,
+                                            top: 532.0720214844,
+                                            child: Align(
+                                              child: SizedBox(
+                                                width: 191,
+                                                height: 143.78,
+                                                child: Image.asset(
+                                                  'assets/images/cloud_design.png',
+                                                  width: 191,
+                                                  height: 143.78,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Stack(
+                                        children: [
+                                          Container(
+                                            width: 374,
+                                            height: 314,
+                                            child: Card(
+                                              elevation: 4,
+                                              color: Color(0xFFF5D50FE),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(39.0),
+                                              ),
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8),
+                                                        child: Text(
+                                                          ' ${roundTemperature(infoWeatherEntity.main?.temp)}°',
+                                                          style: TextStyle(
+                                                            fontSize: 120,
+                                                            color: AppColors
+                                                                .textPrimary,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      child: Text(
+                                                        ' ${infoWeatherEntity.weather?[0].description ?? ''}',
+                                                        style: TextStyle(
+                                                          fontSize: 23,
+                                                          color: AppColors
+                                                              .textPrimary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(0),
+                                                      child: Text(
+                                                        "Humidity",
+                                                        style: TextStyle(
+                                                          fontSize: 19,
+                                                          color: AppColors
+                                                              .textPrimary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 20),
+                                                      child: Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Opacity(
+                                                          opacity: 0.2,
+                                                          child: Text(
+                                                            " ${roundTemperature(infoWeatherEntity.main?.humidity) ?? ''}°",
+                                                            style: TextStyle(
+                                                              fontSize: 27,
+                                                              color: AppColors
+                                                                  .textPrimary,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                    : Card(
-                                        elevation: 4,
-                                        color: Color(0xFFF5D50FE),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(39.0),
-                                        ),
-                                        child: SingleChildScrollView(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Align(
-                                                alignment: Alignment.center,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Text(
-                                                    ' ${roundTemperature(infoWeatherEntity.main?.temp)}°',
-                                                    style: TextStyle(
-                                                      fontSize: 120,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
+                                          Positioned(
+                                              left: 237.8889160156,
+                                              top: 212.24609375,
+                                              child: Container(
+                                                width: 77.73,
+                                                height: 77.73,
+                                                child: Image.asset(
+                                                  'assets/images/moon.png',
+                                                  width: 77.73,
+                                                  height: 77.73,
+                                                ),
+                                              )),
+                                          Positioned(
+                                            // cloud26AgT (1:1857)
+                                            left: 227.8889160156,
+                                            top: 222.24609375,
+                                            child: Align(
+                                              child: SizedBox(
+                                                width: 153.11,
+                                                height: 113.17,
+                                                child: Image.asset(
+                                                  'assets/images/cloud_design.png',
+                                                  width: 153.11,
+                                                  height: 113.17,
                                                 ),
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.all(8),
-                                                child: Text(
-                                                  ' ${infoWeatherEntity.weather?[0].description ?? ''}',
-                                                  style: TextStyle(
-                                                    fontSize: 23,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.all(8),
-                                                child: Text(
-                                                  "Humidity",
-                                                  style: TextStyle(
-                                                    fontSize: 19,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 40),
-                                                child: Align(
-                                                  alignment: Alignment.center,
-                                                  child: Opacity(
-                                                    opacity: 0.2,
-                                                    child: Text(
-                                                      " ${roundTemperature(infoWeatherEntity.main?.humidity) ?? ''}°",
-                                                      style: TextStyle(
-                                                        fontSize: 27,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 15),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                               ),
                             ),
@@ -430,7 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       return Center(child: Text('No forecast data available.'));
                     }
                     return SizedBox(
-                      height: 176,
+                      height: 193.46,
                       child: ListView.separated(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         scrollDirection: Axis.horizontal,
@@ -444,35 +522,55 @@ class _HomeScreenState extends State<HomeScreen> {
                               DateFormat('EEEE').format(DateTime.parse(day));
                           final List<InfoWeatherEntity>? dailyForecast =
                               forecastData[day];
-
+                          final description =
+                              dailyForecast?[0].weather?[0].description;
                           if (dailyForecast == null || dailyForecast.isEmpty) {
                             return Container(); // Hoặc một widget khác tùy bạn chọn
                           }
 
-                          final Color randomColor = Color(
-                                  (Random().nextDouble() * 0xFFFFFF).toInt() <<
-                                      0)
-                              .withOpacity(1.0);
+                          Color selectedColor = getColorAtIndex(index);
 
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      DailyWeatherScreen(day, dailyForecast),
+                                  builder: (context) => DailyWeatherScreen(
+                                    day,
+                                    dailyForecast,
+                                    weatherService.city,
+                                    selectedColor,
+                                  ),
                                 ),
                               );
                             },
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
+                                Positioned(
+                                  bottom: 0,
+                                  child: Align(
+                                    child: SizedBox(
+                                      width: 70,
+                                      height: 107.33,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(9),
+                                          color: selectedColor,
+                                        ),
+                                        width: 145.21,
+                                        height: 107.33,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 Container(
                                   width: 128,
-                                  height: 176,
+                                  margin: EdgeInsets.only(bottom: 10),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(29),
-                                    color: randomColor,
+                                    color: selectedColor,
                                   ),
                                 ),
                                 Column(
@@ -481,19 +579,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Text(
                                       formattedDate,
                                       style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
+                                          fontSize: 14,
+                                          color: AppColors.textPrimary),
                                     ),
                                     SizedBox(height: 8),
-                                    Icon(
-                                      // Thêm biểu tượng thời tiết vào đây
-                                      Icons.cloud,
-                                      size: 40,
-                                      color: Colors.white,
+                                    Align(
+                                      child: SizedBox(
+                                        child: SvgPicture.asset(
+                                            getWeatherIcon(description!)),
+                                      ),
                                     ),
                                     Text(
-                                      '${(dailyForecast[0].main?.temp ?? 0.0).round()}°C',
-                                      style: TextStyle(fontSize: 16),
+                                      '${(dailyForecast[0].main?.temp ?? 0.0).round()}°',
+                                      style: TextStyle(
+                                          fontSize: 27,
+                                          color: AppColors.textPrimary),
                                     ),
                                     SizedBox(height: 8),
                                     Row(
@@ -501,16 +601,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '${(dailyForecast[0].main?.tempMax ?? 0.0).round()}°C',
-                                          style: TextStyle(fontSize: 14),
+                                          '${(dailyForecast[0].main?.tempMin ?? 0.0).round()}°',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: AppColors.textPrimary
+                                                  .withOpacity(0.5)),
                                         ),
                                         SizedBox(width: 8),
                                         Text(
-                                          '${(dailyForecast[0].main?.tempMin ?? 0.0).round()}°C',
-                                          style: TextStyle(fontSize: 14),
+                                          '${(dailyForecast[0].main?.tempMax ?? 0.0).round()}°',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: AppColors.textPrimary),
                                         ),
                                       ],
                                     ),
+                                    SizedBox(height: 10),
                                   ],
                                 ),
                               ],
