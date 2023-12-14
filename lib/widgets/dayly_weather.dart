@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/common/app_color.dart';
 import 'package:weather_app/common/app_icon.dart';
+import 'package:weather_app/common/app_logic.dart';
 import 'package:weather_app/models/entities/info_weather_entity.dart';
 import 'package:weather_app/services/weather_service.dart';
 import 'package:flutter_svg/svg.dart';
@@ -92,10 +93,8 @@ class DailyWeatherScreen extends StatelessWidget {
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else {
-                      final String formattedDate =
-                          DateFormat('EEEE').format(DateTime.parse(day));
-                       final description1 =
-                              dailyForecast[0].weather?[0].description;
+                      final String formattedDate =DateFormat('EEEE').format(DateTime.parse(day));
+                      final description1 =dailyForecast[0].weather?[0].description;
                       return Stack(
                         children: [
                           Card(
@@ -115,17 +114,16 @@ class DailyWeatherScreen extends StatelessWidget {
                                         color: AppColors.textPrimary),
                                   ),
                                   SizedBox(height: 18),
-                                   Align(
-                                      child: SizedBox(
-                                        width: 159.75,
-                                        height: 159.75,
-                                        child: SvgPicture.asset(
-                                            getWeatherIcon(description1!)),
-                                      ),
+                                  Align(
+                                    child: SizedBox(
+                                      width: 159.75,
+                                      height: 159.75,
+                                      child: SvgPicture.asset(
+                                          getWeatherIcon(description1!)),
                                     ),
-                                    
+                                  ),
                                   Text(
-                                    '${(dailyForecast[0].main?.temp ?? 0.0).round()}°',
+                                    '${roundTemperature(dailyForecast[0].main?.temp)}°',
                                     style: TextStyle(
                                         fontSize: 61,
                                         color: AppColors.textPrimary),
@@ -135,7 +133,7 @@ class DailyWeatherScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        '${(dailyForecast[0].main?.tempMin ?? 0.0).round()}°',
+                                        '${roundTemperature(dailyForecast[0].main?.tempMin )}°',
                                         style: TextStyle(
                                             fontSize: 30,
                                             color: AppColors.textPrimary
@@ -143,7 +141,7 @@ class DailyWeatherScreen extends StatelessWidget {
                                       ),
                                       SizedBox(width: 18),
                                       Text(
-                                        '${(dailyForecast[0].main?.tempMax ?? 0.0).round()}°',
+                                        '${roundTemperature(dailyForecast[0].main?.tempMax )}°',
                                         style: TextStyle(
                                             fontSize: 30,
                                             color: AppColors.textPrimary),
@@ -163,45 +161,29 @@ class DailyWeatherScreen extends StatelessWidget {
                                         children: List.generate(
                                           dailyForecast.length,
                                           (index) {
-                                            final timestamp =
-                                                dailyForecast[index].dt as int;
-                                            final date = DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                    timestamp * 1000);
-                                            final time = DateFormat('HH:mm')
-                                                .format(date);
-                                            final temperature =
-                                                dailyForecast[index].main?.temp;
-                                            final description =
-                                                dailyForecast[index]
-                                                    .weather?[0]
-                                                    .description;
+                                            final timestamp = dailyForecast[index].dt as int;
+                                            final date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+                                            final time = DateFormat('HH:mm').format(date);
+                                            final temperature =dailyForecast[index].main?.temp;
+                                            final description =dailyForecast[index].weather?[0].description;
                                             return Container(
-                                              width:
-                                                  59, // Điều chỉnh chiều rộng của mỗi phần tử
-                                              height:
-                                                  81.5, // Điều chỉnh chiều cao của mỗi phần tử
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      10), // Tạo khoảng cách giữa các phần tử
+                                              width:59, // Điều chỉnh chiều rộng của mỗi phần tử
+                                              height:81.5, // Điều chỉnh chiều cao của mỗi phần tử
+                                              margin: EdgeInsets.symmetric(horizontal:10), // Tạo khoảng cách giữa các phần tử
                                               padding: EdgeInsets.all(8),
                                               child: Column(
-                                                mainAxisAlignment: MainAxisAlignment
-                                                    .center, // Căn chỉnh phần tử con theo chiều dọc
+                                                mainAxisAlignment: MainAxisAlignment.center, // Căn chỉnh phần tử con theo chiều dọc
                                                 children: [
                                                   Text(
                                                     time,
                                                     style: TextStyle(
-                                                        fontSize: 14,
-                                                        ),
+                                                      fontSize: 14,
+                                                    ),
                                                   ),
                                                   SizedBox(height: 8),
-                                                  // Tạo khoảng cách giữa các dòng
                                                   Align(
                                                     child: SizedBox(
-                                                      child: SvgPicture.asset(
-                                                          getWeatherIconHourly(
-                                                              description!)),
+                                                      child: SvgPicture.asset(getWeatherIconHourly(description!)),
                                                     ),
                                                   ),
                                                   SizedBox(height: 8),

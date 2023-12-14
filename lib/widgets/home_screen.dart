@@ -36,6 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
     loadWeatherData();
   }
 
+  DateTime getNextDayDate() {
+    final now = DateTime.now();
+    final tomorrow = DateTime(now.year, now.month, now.day + 1);
+    return tomorrow;
+  }
+
   // Function to load both current and forecast weather data
   void loadWeatherData() {
     currentWeatherData = weatherService.getCurrentWeather();
@@ -133,12 +139,48 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Tomorrow",
-                      style: TextStyle(fontSize: 15),
-                    ),
+                  FutureBuilder(
+                    future: forecastWeatherData,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: Container());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        Map<String, List<InfoWeatherEntity>> forecastData =
+                            snapshot.data
+                                as Map<String, List<InfoWeatherEntity>>;
+                        final String day = forecastData.keys.elementAt(1);
+                        final List<InfoWeatherEntity>? dailyForecast =
+                            forecastData[day];
+                        if (forecastData.isEmpty) {
+                          return Center(
+                              child: Text('No forecast data available.'));
+                        }
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DailyWeatherScreen(
+                                  day,
+                                  dailyForecast!,
+                                  weatherService.city,
+                                  getColorAtIndex(1),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              "Tomorrow",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
                   InkWell(
                     onTap: () {
@@ -290,12 +332,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               ),
                                                             ],
                                                           ),
-                                                          Padding(
+                                                          // Padding(
+                                                          //   padding:
+                                                          //       EdgeInsets.all(
+                                                          //            30),
+                                                          //   child: Text(
+                                                          //     'Rain Starting in 13 min',
+                                                          //     style: TextStyle(
+                                                          //       fontSize: 23,
+                                                          //       color: AppColors
+                                                          //           .textPrimary,
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
+                                                           Padding(
                                                             padding:
-                                                                EdgeInsets.only(
-                                                                    top: 70),
+                                                                EdgeInsets.all(
+                                                                     30),
                                                             child: Text(
-                                                              'Rain Starting in 13 min',
+                                                              'Wind Speed: ${infoWeatherEntity.wind?.speed ?? ''} m/s ',
                                                               style: TextStyle(
                                                                 fontSize: 23,
                                                                 color: AppColors
@@ -307,9 +362,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             padding:
                                                                 EdgeInsets.only(
                                                                     bottom:
+                                                                        5),
+                                                            child: Text(
+                                                              'Mặt trời mọc lúc: ${infoWeatherEntity.sunrise}',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                color: AppColors
+                                                                    .textPrimary,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    bottom:
                                                                         100),
                                                             child: Text(
-                                                              'Nearest precip: ${infoWeatherEntity.wind?.speed ?? ''}',
+                                                              'Mặt trời lặn lúc: ${infoWeatherEntity.sunset}',
                                                               style: TextStyle(
                                                                 fontSize: 12,
                                                                 color: AppColors
@@ -424,7 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         child: Opacity(
                                                           opacity: 0.2,
                                                           child: Text(
-                                                            " ${roundTemperature(infoWeatherEntity.main?.humidity) ?? ''}°",
+                                                            " ${roundTemperature(infoWeatherEntity.main?.humidity)}°",
                                                             style: TextStyle(
                                                               fontSize: 27,
                                                               color: AppColors
@@ -590,7 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     Text(
-                                      '${(dailyForecast[0].main?.temp ?? 0.0).round()}°',
+                                      '${roundTemperature(dailyForecast[0].main?.temp)}°',
                                       style: TextStyle(
                                           fontSize: 27,
                                           color: AppColors.textPrimary),
@@ -601,7 +670,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '${(dailyForecast[0].main?.tempMin ?? 0.0).round()}°',
+                                          '${roundTemperature(dailyForecast[0].main?.tempMin)}°',
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: AppColors.textPrimary
@@ -609,7 +678,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         SizedBox(width: 8),
                                         Text(
-                                          '${(dailyForecast[0].main?.tempMax ?? 0.0).round()}°',
+                                          '${roundTemperature(dailyForecast[0].main?.tempMax)}°',
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: AppColors.textPrimary),

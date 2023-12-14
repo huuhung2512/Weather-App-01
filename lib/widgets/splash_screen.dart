@@ -6,7 +6,6 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 class _SplashScreenState extends State<SplashScreen> {
-  // Phương thức để chuyển màn hình ngang về FirstScreen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
