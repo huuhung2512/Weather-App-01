@@ -83,7 +83,8 @@ class InfoWeatherEntity {
 
     String get sunrise {
     try {
-      DateTime sunriseTime = DateTime.fromMillisecondsSinceEpoch((sys!.sunrise! * 1000) as int, isUtc: true);
+      int? timeSunrise  =  sys?.sunrise?.toInt(); 
+      DateTime sunriseTime = DateTime.fromMillisecondsSinceEpoch((timeSunrise! * 1000) , isUtc: true);
       DateTime vietnamSunriseTime = sunriseTime.toLocal();
       return vietnamSunriseTime.customOnlyDate(format: DateTimeFormater.dateTime);
     } catch (_) {
@@ -93,7 +94,8 @@ class InfoWeatherEntity {
 
   String get sunset {
     try {
-      DateTime sunsetTime = DateTime.fromMillisecondsSinceEpoch((sys!.sunset! * 1000) as int, isUtc: true);
+      int? timeSunset  =  sys?.sunset?.toInt(); 
+      DateTime sunsetTime = DateTime.fromMillisecondsSinceEpoch((timeSunset! * 1000), isUtc: true);
       DateTime vietnamSunsetTime = sunsetTime.toLocal();
       return vietnamSunsetTime.customOnlyDate(format: DateTimeFormater.dateTime);
     } catch (_) {
